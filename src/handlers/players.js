@@ -27,7 +27,7 @@ async function join(req, res) {
         { expiresIn: '7d' } // Currently limits session authorization to 7 days, should convert later to allow for sessions that stay open longer than 7 days
     );
 
-    sendJSON(req, 200, { player: player.rows[0], token });
+    sendJSON(res, 200, { player: player.rows[0], token });
 }
 
 module.exports = { join };
