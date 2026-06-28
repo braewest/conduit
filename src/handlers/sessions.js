@@ -4,7 +4,7 @@ const { requireApiKey } = require('../middleware/auth');
 
 function randomCode() {
     // Generate a random string and take 6 letters
-    return Math.random().toString(36).substring(2, 8).toUpperCase
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
 // Create a session in the database
