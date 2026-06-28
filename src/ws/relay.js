@@ -1,3 +1,5 @@
+const { pool } = require('../db');
+
 // sessionId -> Map(playerId -> WebSocket)
 const sessions = new Map();
 
