@@ -22,3 +22,16 @@ async function create(req, res) {
     );
     sendJSON(res, 201, result.rows[0]); // Return session data
 }
+
+// Get session data
+async function get(req, res, sessionId) {
+    const result = await pool.query(
+        'SELECT * FROM sessions WHERE id = $1',
+        [sessionId]
+    );
+    if (!result.rows.length)
+        return sendJSON(res, 404, { error: 'Session not found' });
+    sendJSON(res, 200, result.rows[0]);
+}
+
+module.exports = { create, get };
