@@ -14,7 +14,7 @@ function requireApiKey(req, res) {
 // Verify JWT
 function verifyToken(req, res) {
     const auth = req.headers['authorization'] || '';
-    const token = auth.replace('Bearer ', '');
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
     try {
         // Check if the JWT is valid
         return jwt.verify(token, process.env.JWT_SECRET);

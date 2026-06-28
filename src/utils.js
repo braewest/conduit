@@ -4,6 +4,7 @@ function readBody(req) {
         let body = '';
         req.on('data', chunk => body += chunk.toString()); // Chunk data to body
         req.on('end', () => { // When end of chunks, parse body to JS object
+            if (!body) return resolve({});
             try { resolve(JSON.parse(body)); }
             catch { reject(new Error('Invalid JSON')); }
         });

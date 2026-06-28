@@ -8,10 +8,10 @@ function initWebSocket(server) {
     const wss = new WebSocketServer({ server });
 
     // On connection, verify player has authorization to connect to server
-    wss.on('connection', (socket, req) => {
+    wss.on('connection', async (socket, req) => {
         const url = new URL(req.url, `http://localhost`);
         const token = url.searchParams.get('token');
-        const lastSeq = parseInt(url.searchParams.get('after') || '0'); // Retrieve last sequence number
+        const lastSeq = parseInt(url.searchParams.get('after') || '0');
 
         let player;
         try {
@@ -23,12 +23,16 @@ function initWebSocket(server) {
 
         // Create socket and send any missed events in event of a reconnection
         addSocket(player.session_id, player.player_id, socket);
-        sendMissedEvents(socket, player.session_id, lastSeq);
+        await sendMissedEvents(socket, player.session_id, lastSeq);
 
         // On socket message, relay data to other players
         socket.on('message', async (data) => {
-            const event = JSON.parse(data);
-            await relay(player.session_id, player.player_id, event, pool);
+            try {
+                const event = JSON.parse(data);
+                await relay(player.session_id, player.player_id, event, pool);
+            } catch (err) {
+                socket.close(4002, 'Bad request');
+            }
         });
 
         // On socket close, remove socket connection

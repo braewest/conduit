@@ -16,20 +16,14 @@ function removeSocket(sessionId, playerId) {
 
 // Relay data to all other players in session
 async function relay(sessionId, fromPlayerId, event, pool) {
-    // Get next sequence number
-    const seqResult = await pool.query(
-        `SELECT COALESCE(MAX(sequence_number), 0) + 1 AS next
-         FROM events WHERE session_id = $1`,
-         [sessionId]
-    );
-    const seq = seqResult.rows[0].next;
-
-    // Persist the event in the database
+    // Persist the event, atomically claiming the next sequence number
     const saved = await pool.query(
         `INSERT INTO events
             (session_id, from_player_id, type, payload, sequence_number)
-        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [sessionId, fromPlayerId, event.type, event.payload, seq]
+        VALUES ($1, $2, $3, $4,
+            COALESCE((SELECT MAX(sequence_number) FROM events WHERE session_id = $1), 0) + 1
+        ) RETURNING *`,
+        [sessionId, fromPlayerId, event.type, event.payload]
     );
 
     const outbound = JSON.stringify(saved.rows[0]); // Outbound message

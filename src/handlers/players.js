@@ -6,6 +6,9 @@ const { readBody, sendJSON } = require('../utils');
 async function join(req, res) {
     const { join_code, display_name } = await readBody(req);
 
+    if (!join_code || !display_name)
+        return sendJSON(res, 400, { error: 'join_code and display_name are required' });
+
     // Look for session in database
     const session = await pool.query(
         'SELECT * FROM sessions WHERE join_code = $1', [join_code]

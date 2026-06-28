@@ -27,15 +27,15 @@ async function router(req, res) {
             return await sessions.get(req, res, parts[1]);
 
         // GET /sessions/:id/events?after=N - get event log, optionally filtered by sequence number
-        if (method === 'GET' && parts[0] === 'session' && parts[2] === 'events')
+        if (method === 'GET' && parts[0] === 'sessions' && parts[2] === 'events' && parts.length === 3)
             return await events.list(req, res, parts[1], url.searchParams);
 
         // POST /sessions/:id/assets - upload a custom asset for a session
-        if (method === 'POST' && parts[0] === 'session' && parts[2] === 'assets')
+        if (method === 'POST' && parts[0] === 'sessions' && parts[2] === 'assets' && parts.length === 3)
             return await assets.create(req, res, parts[1]);
 
         // GET /sessions/:id/assets - retrieve all assets for a session
-        if (method === 'GET' && parts[0] === 'session' && parts[2] === 'assets')
+        if (method === 'GET' && parts[0] === 'sessions' && parts[2] === 'assets' && parts.length === 3)
             return await assets.list(req, res, parts[1]);
 
         sendJSON(res, 404, { error: 'Not found' });
