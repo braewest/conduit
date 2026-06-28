@@ -11,11 +11,11 @@ function addSocket(sessionId, playerId, socket) {
 
 // Remove socket connection from session
 function removeSocket(sessionId, playerId) {
-    sessionId.get(sessionId)?.delete(playerId);
+    sessions.get(sessionId)?.delete(playerId);
 }
 
 // Relay data to all other players in session
-function relay(sessionId, fromPlayerId, event, pool) {
+async function relay(sessionId, fromPlayerId, event, pool) {
     // Get next sequence number
     const seqResult = await pool.query(
         `SELECT COALESCE(MAX(sequence_number), 0) + 1 AS next
