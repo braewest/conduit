@@ -1,0 +1,28 @@
+{
+  "name": "conduit",
+  "version": "1.0.0",
+  "description": "Lightweight real-time event relay server for multiplayer games with WebSocket broadcasting, JWT auth, event sourcing, and REST asset storage.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/braewest/conduit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/braewest/conduit/issues"
+  },
+  "homepage": "https://github.com/braewest/conduit#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.22.0",
+    "redis": "^6.0.1",
+    "ws": "^8.21.0"
+  }
+}
