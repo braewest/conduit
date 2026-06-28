@@ -5,13 +5,13 @@ const { pool } = require('../db');
 
 // Initiate web socket server
 function initWebSocket(server) {
-    const wss = new WebSocketServer(server);
+    const wss = new WebSocketServer({ server });
 
     // On connection, verify player has authorization to connect to server
     wss.on('connection', (socket, req) => {
         const url = new URL(req.url, `http://localhost`);
         const token = url.searchParams.get('token');
-        const lastSqe = parseInt(url.searchParams.get('after') || '0'); // Retrieve last sequence number
+        const lastSeq = parseInt(url.searchParams.get('after') || '0'); // Retrieve last sequence number
 
         let player;
         try {
