@@ -17,7 +17,7 @@ function relay(sessionId, fromPlayerId, event, pool) {
     // Get next sequence number
     const seqResult = await pool.query(
         `SELECT COALESCE(MAX(sequence_number), 0) + 1 AS next
-         FROM events WHERE session_ID = $1`,
+         FROM events WHERE session_id = $1`,
          [sessionId]
     );
     const seq = seqResult.rows[0].next;
