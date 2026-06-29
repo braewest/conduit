@@ -1,20 +1,20 @@
 const jwt = require('jsonwebtoken');
 const { pool } = require('../db');
-const { readBody, sendJSON } = require('../utils');
+const { readBody, sendJSON, sendError } = require('../utils');
 
 // Join session
 async function join(req, res) {
     const { join_code, display_name } = await readBody(req);
 
     if (!join_code || !display_name)
-        return sendJSON(res, 400, { error: 'join_code and display_name are required' });
+        return sendError(res, 400, 'join_code and display_name are required');
 
     // Look for session in database
     const session = await pool.query(
         'SELECT * FROM sessions WHERE join_code = $1', [join_code]
     );
-    if (!session.rows.length) // Return if no session found
-        return sendJSON(res, 404, { error: 'Session not found' });
+    if (!session.rows.length)
+        return sendError(res, 404, 'Session not found');
 
     // If session was found, create a player in the database
     const player = await pool.query(

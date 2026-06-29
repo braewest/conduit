@@ -1,5 +1,5 @@
 const { pool } = require('../db');
-const { readBody, sendJSON } = require('../utils');
+const { readBody, sendJSON, sendError } = require('../utils');
 const { requireApiKey } = require('../middleware/auth');
 
 function randomCode() {
@@ -30,7 +30,7 @@ async function get(req, res, sessionId) {
         [sessionId]
     );
     if (!result.rows.length)
-        return sendJSON(res, 404, { error: 'Session not found' });
+        return sendError(res, 404, 'Session not found');
     sendJSON(res, 200, result.rows[0]);
 }
 

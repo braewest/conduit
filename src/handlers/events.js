@@ -9,9 +9,9 @@ async function list(req, res, sequenceId, params) {
     const after = parseInt(params.get('after') || '0')
     const result = await pool.query(
         `SELECT * FROM events
-         WHERE session_id = $1 AND sequence_number ? $2
+         WHERE session_id = $1 AND sequence_number > $2
          ORDER BY sequence_number ASC`,
-         [sessionId, after]
+         [sequenceId, after]
     );
     sendJSON(res, 200, result.rows);
 }

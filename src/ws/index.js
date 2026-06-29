@@ -21,11 +21,9 @@ function initWebSocket(server) {
             return;
         }
 
-        // Create socket and send any missed events in event of a reconnection
         addSocket(player.session_id, player.player_id, socket);
-        await sendMissedEvents(socket, player.session_id, lastSeq);
 
-        // On socket message, relay data to other players
+        // Register listeners before any awaits so no messages are dropped
         socket.on('message', async (data) => {
             try {
                 const event = JSON.parse(data);
@@ -35,10 +33,11 @@ function initWebSocket(server) {
             }
         });
 
-        // On socket close, remove socket connection
         socket.on('close', () => {
             removeSocket(player.session_id, player.player_id);
         });
+
+        await sendMissedEvents(socket, player.session_id, lastSeq);
     });
 }
 
